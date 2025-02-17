@@ -3,7 +3,6 @@
 import datetime
 from django.db import migrations, models
 import django.db.models.deletion
-from django.utils.timezone import utc
 import uuid
 
 
@@ -28,7 +27,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='userotp',
             name='expires_at',
-            field=models.DateTimeField(default=datetime.datetime(2025, 2, 17, 16, 7, 5, 567307, tzinfo=utc)),
+            field=models.DateTimeField(default=datetime.datetime(2025, 2, 17, 16, 7, 5, 567307)),
         ),
         migrations.CreateModel(
             name='NotificationPreference',
