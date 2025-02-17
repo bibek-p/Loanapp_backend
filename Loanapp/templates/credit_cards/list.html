@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Credit Cards</h2>
+        <a href="{% url 'add_credit_card' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add New Card
+        </a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Card Name</th>
+                <th>Issuer</th>
+                <th>Network</th>
+                <th>Annual Fees</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for card in credit_cards %}
+            <tr>
+                <td>{{ card.card_name }}</td>
+                <td>{{ card.issuer }}</td>
+                <td>{{ card.network }}</td>
+                <td>${{ card.annual_fees }}</td>
+                <td>{% if card.active_status %}Active{% else %}Inactive{% endif %}</td>
+                <td>
+                    <a href="{% url 'update_credit_card' card.id %}" class="btn btn-sm btn-outline-primary me-2">Edit</a>
+                    <form action="{% url 'delete_credit_card' card.id %}" method="POST" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this card?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">No credit cards found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %} 

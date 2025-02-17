@@ -1,0 +1,442 @@
+{
+    "info": {
+        "_postman_id": "your-collection-id",
+        "name": "LoanApp API",
+        "description": "API collection for LoanApp including banners, credit cards, and policies.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Banners",
+            "item": [
+                {
+                    "name": "Get Live Banners",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/api/v1/loanapp/banners/live/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "loanapp",
+                                "banners",
+                                "live"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Add Banner",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"image_url\": \"https://example.com/banner.jpg\", \"is_live\": true, \"title\": \"Welcome Banner\", \"description\": \"This is the welcome banner for our homepage.\", \"order\": 1}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/api/v1/loanapp/banners/add/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "loanapp",
+                                "banners",
+                                "add"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Banner",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/api/v1/loanapp/banners/delete/<banner_id>/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "loanapp",
+                                "banners",
+                                "delete",
+                                "<banner_id>"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Credit Card Categories",
+            "item": [
+                {
+                    "name": "Add Credit Card Category",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\": \"Travel\", \"description\": \"Travel related credit cards.\"}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/api/v1/loanapp/credit-card-categories/add/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "loanapp",
+                                "credit-card-categories",
+                                "add"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Credit Card Categories",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/api/v1/loanapp/credit-card-categories/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "loanapp",
+                                "credit-card-categories"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Credit Card Category",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"name\": \"Updated Travel\", \"description\": \"Updated travel related credit cards.\"}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/api/v1/loanapp/credit-card-categories/update/<category_id>/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "loanapp",
+                                "credit-card-categories",
+                                "update",
+                                "<category_id>"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Credit Card Category",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/api/v1/loanapp/credit-card-categories/delete/<category_id>/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "loanapp",
+                                "credit-card-categories",
+                                "delete",
+                                "<category_id>"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Credit Cards",
+            "item": [
+                {
+                    "name": "Add Credit Card",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"card_name\": \"Sample Card\", \"issuer\": \"Bank A\", \"network\": \"Visa\", \"card_type\": \"Rewards\", \"annual_fees\": 99.99, \"apr_information\": \"15%\", \"transaction_fees\": 2.00, \"credit_score_requirements\": \"700+\", \"welcome_bonus_details\": \"10000 points\", \"regular_rewards_rates\": 1.5, \"category_specific_reward_rates\": {\"travel\": 2.0, \"dining\": 3.0}, \"travel_benefits\": \"Free checked bags\", \"shopping_perks\": \"Cashback on purchases\", \"insurance_coverage\": \"Travel insurance\", \"affiliate_links\": \"http://example.com\", \"commission_rates\": 0.05, \"tracking_ids\": \"TRACK123\", \"card_images\": \"http://example.com/image.jpg\", \"logos\": \"http://example.com/logo.jpg\", \"meta_information\": {\"description\": \"Best rewards card\"}, \"active_status\": true, \"featured_ranking\": 1, \"popularity_metrics\": 1000}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/api/v1/loanapp/credit-cards/add/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "loanapp",
+                                "credit-cards",
+                                "add"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Credit Cards",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/api/v1/loanapp/credit-cards/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "loanapp",
+                                "credit-cards"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Credit Card",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"card_name\": \"Updated Card\", \"issuer\": \"Bank B\", \"network\": \"Mastercard\", \"card_type\": \"Business\", \"annual_fees\": 149.99, \"apr_information\": \"12%\", \"transaction_fees\": 1.50, \"credit_score_requirements\": \"650+\", \"welcome_bonus_details\": \"5000 points\", \"regular_rewards_rates\": 1.0, \"category_specific_reward_rates\": {\"travel\": 2.5, \"dining\": 3.5}, \"travel_benefits\": \"Priority boarding\", \"shopping_perks\": \"Extended warranty\", \"insurance_coverage\": \"Purchase protection\", \"affiliate_links\": \"http://example.com/updated\", \"commission_rates\": 0.07, \"tracking_ids\": \"TRACK456\", \"card_images\": \"http://example.com/updated_image.jpg\", \"logos\": \"http://example.com/updated_logo.jpg\", \"meta_information\": {\"description\": \"Updated rewards card\"}, \"active_status\": true, \"featured_ranking\": 2, \"popularity_metrics\": 2000}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/api/v1/loanapp/credit-cards/update/<card_id>/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "loanapp",
+                                "credit-cards",
+                                "update",
+                                "<card_id>"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Credit Card",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/api/v1/loanapp/credit-cards/delete/<card_id>/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "loanapp",
+                                "credit-cards",
+                                "delete",
+                                "<card_id>"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Policies",
+            "item": [
+                {
+                    "name": "Add Policy",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"title\": \"Terms and Conditions\", \"content\": \"These are the terms and conditions.\"}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/api/v1/loanapp/policies/add/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "loanapp",
+                                "policies",
+                                "add"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Policies",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/api/v1/loanapp/policies/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "loanapp",
+                                "policies"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Policy",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"title\": \"Updated Terms and Conditions\", \"content\": \"These are the updated terms and conditions.\"}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:8000/api/v1/loanapp/policies/update/<policy_id>/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "loanapp",
+                                "policies",
+                                "update",
+                                "<policy_id>"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Policy",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "http://localhost:8000/api/v1/loanapp/policies/delete/<policy_id>/",
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "8000",
+                            "path": [
+                                "api",
+                                "v1",
+                                "loanapp",
+                                "policies",
+                                "delete",
+                                "<policy_id>"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
+}
