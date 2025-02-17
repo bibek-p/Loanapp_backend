@@ -77,19 +77,34 @@ WSGI_APPLICATION = 'Loanapp_Backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'loan_app',
+#         'USER': 'root',  
+#         'PASSWORD': 'root@123',   
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#         'OPTIONS': {
+            
+#         },
+#     },
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'loan_app',
-        'USER': 'root',  
-        'PASSWORD': 'root@123',   
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'django_cockroachdb',
+        'NAME': 'defaultdb',
+        'USER': 'bibekananda',
+        'PASSWORD': '5r5SMbpup2Yq-52UzEJisQ',
+        'HOST': 'loanapp-8204.j77.aws-ap-south-1.cockroachlabs.cloud',
+        'PORT': '26257',
         'OPTIONS': {
-            
+            'sslmode': 'require',
         },
     },
 }
+
 
 
 # Password validation
