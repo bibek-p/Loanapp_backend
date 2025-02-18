@@ -16,7 +16,7 @@ def phonepe_create_order(ui_redirect_url, s2s_callback_url, unique_transaction_i
             settings.PHONEPE_MERCHANT_ID,
             settings.PHONEPE_SALT_KEY,
             settings.PHONEPE_SALT_INDEX,
-            Env.UAT,  # environment
+            Env.PROD,  # environment
             True  # should_publish_events
         )
 
@@ -80,7 +80,7 @@ def check_payment_status(merchant_transaction_id):
             settings.PHONEPE_MERCHANT_ID,
             settings.PHONEPE_SALT_KEY,
             settings.PHONEPE_SALT_INDEX,
-            Env.UAT,  # environment
+            Env.PROD,  # environment
             True  # should_publish_events
         )
 
