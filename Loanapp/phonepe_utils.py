@@ -19,6 +19,7 @@ def phonepe_create_order(ui_redirect_url, s2s_callback_url, unique_transaction_i
             Env.PROD,  # environment
             True  # should_publish_events
         )
+        
 
         # Convert amount to paise
         amount_in_paise = int(float(amount) * 100)
@@ -29,8 +30,8 @@ def phonepe_create_order(ui_redirect_url, s2s_callback_url, unique_transaction_i
             merchant_transaction_id=unique_transaction_id,
             amount=amount_in_paise,
             merchant_user_id=str(user_id),
-            callback_url=s2s_callback_url,
-            redirect_url=ui_redirect_url
+            callback_url="https://trendipay.digital/",
+            redirect_url="https://trendipay.digital/"
         )
 
         # Make payment request
