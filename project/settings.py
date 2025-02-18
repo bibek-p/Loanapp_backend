@@ -39,7 +39,7 @@ APPEND_SLASH = False
 PHONEPE_MERCHANT_ID = 'M222TOPSIPMSS'
 PHONEPE_SALT_KEY = '7e3e9783-4852-4c4b-b186-8dcf19b307b1'
 PHONEPE_SALT_INDEX = 1
-PHONEPE_ENV = 'UAT'  # or 'PROD' for production
+PHONEPE_ENV = 'PROD'  # or 'PROD' for production
 
 # PhonePe API URL
 PHONEPE_API_URL = 'https://api.phonepe.com/apis/hermes/pg/v1/pay'  # Use appropriate URL for prod/test
