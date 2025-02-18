@@ -13,9 +13,9 @@ def phonepe_create_order(ui_redirect_url, s2s_callback_url, unique_transaction_i
         print(f"Initializing PhonePe client with: {settings.PHONEPE_MERCHANT_ID}")
         # Initialize PhonePe client
         phonepe_client = PhonePePaymentClient(
-            settings.PHONEPE_MERCHANT_ID,
-            settings.PHONEPE_SALT_KEY,
-            settings.PHONEPE_SALT_INDEX,
+            "M222TOPSIPMSS",
+            "7e3e9783-4852-4c4b-b186-8dcf19b307b1",
+            1,
             Env.PROD,  # environment
             True  # should_publish_events
         )
