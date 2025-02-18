@@ -15,9 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from Loanapp.views import landing_page,about_us,pages
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', landing_page, name='home'),
+    path('aboutus', about_us, name='about_us'),
+    path('pages/<str:page>', pages, name='pages'),
     # path('api/v1/', include('backend_apis.urls')),  # Existing app
     path('api/v1/loanapp/', include('Loanapp.urls')),  # New app
 ]

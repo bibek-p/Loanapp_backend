@@ -1184,4 +1184,268 @@ def notification_settings(request):
         return Response({
             'status': 'error',
             'message': str(e)
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+def landing_page(request):
+    """
+    Landing page view for Trendipay educational platform
+    """
+    courses = [
+        {
+            'id': 1,
+            'title': 'Machine Learning Fundamentals',
+            'description': 'Learn the basics of Machine Learning with Python',
+            'price': 4999,
+            'duration': '3 months',
+            'image_url': '/static/images/courses/ml-fundamentals.jpg',
+            'features': [
+                'Python Programming Basics',
+                'Data Preprocessing',
+                'Supervised Learning',
+                'Model Evaluation'
+            ]
+        },
+        {
+            'id': 2,
+            'title': 'Deep Learning Specialization',
+            'description': 'Master Deep Learning and Neural Networks',
+            'price': 7999,
+            'duration': '4 months',
+            'image_url': '/static/images/courses/deep-learning.jpg',
+            'features': [
+                'Neural Networks',
+                'Computer Vision',
+                'Natural Language Processing',
+                'Project Implementation'
+            ]
+        },
+        {
+            'id': 3,
+            'title': 'AI for Business Analytics',
+            'description': 'Apply AI to solve real business problems',
+            'price': 5999,
+            'duration': '3 months',
+            'image_url': '/static/images/courses/ai-business.jpg',
+            'features': [
+                'Business Intelligence',
+                'Predictive Analytics',
+                'Data Visualization',
+                'Decision Making'
+            ]
+        }
+    ]
+    
+    return render(request, 'landing/home.html', {
+        'courses': courses
+    }) 
+
+def about_us(request):
+     return render(request, 'landing/aboutus.html') 
+
+def pages(request,page):
+    res={}
+    if page == "terms":
+        res = {
+            'title': 'Terms & Conditions',
+            'content': ''' 
+            
+            <p>Welcome to Trendipay! By accessing or using our website and services, you agree to comply with and be bound by the following Terms and Conditions. Please read them carefully before using our platform. If you do not agree with these terms, you must refrain from using Trendipay.</p>
+                <hr>
+                <h3><strong>1. Introduction</strong></h3>
+                <p>Trendipay offers courses and educational materials for individuals seeking to enhance their knowledge and skills. These Terms and Conditions govern your use of our platform, including purchases, access, and usage of courses.</p>
+                <hr>
+                <h3><strong>2. Eligibility</strong></h3>
+                <p>By using Trendipay, you represent and warrant that you:</p>
+                <ul>
+                    <li>Are at least 18 years old or have parental/guardian consent if under 18.</li>
+                    <li>Have the legal capacity to enter into these Terms and Conditions.</li>
+                </ul>
+                <hr>
+                <h3><strong>3. Account Registration</strong></h3>
+                <ul>
+                    <li>To access our courses, you may be required to create an account.</li>
+                    <li>You are responsible for maintaining the confidentiality of your account credentials.</li>
+                    <li>You agree to provide accurate and complete information during registration.</li>
+                    <li>Trendipay reserves the right to suspend or terminate accounts for any breach of these terms.</li>
+                </ul>
+                <hr>
+                <h3><strong>4. Purchases and Payments</strong></h3>
+                <ul>
+                    <li>All prices for courses are displayed in [currency] and are subject to change without notice.</li>
+                    <li>Payments must be completed via the methods provided on our platform.</li>
+                    <li>Trendipay reserves the right to decline or cancel any purchase for any reason.</li>
+                    <li>Taxes and additional fees may apply based on your location.</li>
+                </ul>
+                <hr>
+                <h3><strong>5. Refund Policy</strong></h3>
+                <ul>
+                    <li>Refund requests must be submitted within [insert time frame, e.g., 7 days] of purchase.</li>
+                    <li>Refunds are subject to our approval and may be denied if course content has been accessed or downloaded.</li>
+                    <li>Processing times for refunds may vary depending on the payment method.</li>
+                </ul>
+                <hr>
+                <h3><strong>6. Use of Content</strong></h3>
+                <ul>
+                    <li>All course materials, including videos, documents, and other resources, are the intellectual property of Trendipay.</li>
+                    <li>You are granted a limited, non-exclusive, non-transferable license to access and use the materials for personal, non-commercial purposes.</li>
+                    <li>You may not reproduce, distribute, or share any course content without our explicit written permission.</li>
+                </ul>
+                <hr>
+                <h3><strong>7. User Conduct</strong></h3>
+                <p>You agree to:</p>
+                <ul>
+                    <li>Use the platform only for lawful purposes.</li>
+                    <li>Refrain from sharing your account credentials with others.</li>
+                    <li>Avoid any actions that may harm or disrupt the functionality of the platform.</li>
+                </ul>
+                <hr>
+                <h3><strong>8. Intellectual Property</strong></h3>
+                <ul>
+                    <li>All trademarks, logos, and content on Trendipay are the property of Trendipay or its licensors.</li>
+                    <li>Unauthorized use of any intellectual property is strictly prohibited.</li>
+                </ul>
+                <hr>
+                <h3><strong>9. Limitation of Liability</strong></h3>
+                <ul>
+                    <li>Trendipay is not liable for any indirect, incidental, or consequential damages resulting from the use or inability to use our platform.</li>
+                    <li>We do not guarantee that the courses will meet your expectations or result in specific outcomes.</li>
+                </ul>
+            
+            
+            '''
+        }
+    if (page == "privacy"):
+            res = {
+                'title': 'Privacy Policy',
+                'content': '''
+                
+                            <p data-pm-slice="1 1 []"><span>Trendipay values your privacy and is committed to protecting your personal information. This Privacy Policy explains how we collect, use, and protect your data when you access or use our website and services. By using Trendipay, you agree to the practices described in this policy. If you do not agree, please discontinue use of our services.</span></p>
+                            <hr>
+                            <h3><span><strong>1. Information We Collect</strong></span></h3>
+                            <p><span>We collect the following types of information:</span></p>
+                            <h4><span>a. Personal Information</span></h4>
+                            <ul data-spread="false">
+                                <li><span>Name</span></li>
+                                <li><span>Email address</span></li>
+                                <li><span>Phone number</span></li>
+                                <li><span>Billing information (e.g., credit card details, billing address)</span></li>
+                            </ul>
+                            <h4><span>b. Non-Personal Information</span></h4>
+                            <ul data-spread="false">
+                                <li><span>Browser type and version</span></li>
+                                <li><span>Device information (e.g., operating system, device type)</span></li>
+                                <li><span>IP address</span></li>
+                                <li><span>Cookies and usage data (e.g., pages visited, time spent on the site)</span></li>
+                            </ul>
+                            <hr>
+                            <h3><span><strong>2. How We Use Your Information</strong></span></h3>
+                            <p><span>We use the information we collect to:</span></p>
+                            <ul data-spread="false">
+                                <li><span>Provide and improve our services.</span></li>
+                                <li><span>Process transactions and send purchase confirmations.</span></li>
+                                <li><span>Communicate with you about updates, offers, and promotions.</span></li>
+                                <li><span>Respond to your inquiries and provide customer support.</span></li>
+                                <li><span>Ensure compliance with our Terms and Conditions.</span></li>
+                            </ul>
+                            <hr>
+                            <h3><span><strong>3. How We Share Your Information</strong></span></h3>
+                            <p><span>We do not sell, rent, or trade your personal information to third parties. However, we may share your data with:</span></p>
+                            <ul data-spread="false">
+                                <li><span><strong>Service Providers:</strong> Third-party vendors who assist with payment processing, data analysis, and other services necessary for our operations.</span></li>
+                                <li><span><strong>Legal Obligations:</strong> Authorities if required by law or to protect our legal rights.</span></li>
+                                <li><span><strong>Business Transfers:</strong> In the event of a merger, sale, or acquisition, your information may be transferred to the new entity.</span></li>
+                            </ul>
+                            <hr>
+                            <h3><span><strong>4. Data Security</strong></span></h3>
+                            <p><span>We implement industry-standard security measures to protect your data from unauthorized access, alteration, or disclosure. These include encryption, secure servers, and access controls. However, no method of transmission or storage is 100% secure, and we cannot guarantee absolute security.</span></p>
+                            <hr>
+                            <h3><span><strong>5. Your Rights</strong></span></h3>
+                            <p><span>Depending on your location, you may have the following rights:</span></p>
+                            <ul data-spread="false">
+                                <li><span>Access, correct, or delete your personal information.</span></li>
+                                <li><span>Restrict or object to data processing.</span></li>
+                                <li><span>Withdraw consent for data collection and processing.</span></li>
+                                <li><span>Request a copy of your data in a portable format.</span></li>
+                            </ul>
+                            <p><span>To exercise these rights, please contact us using the details provided below.</span></p>
+                            <hr>
+                            <h3><span><strong>6. Cookies</strong></span></h3>
+                            <p><span>We use cookies to:</span></p>
+                            <ul data-spread="false">
+                                <li><span>Enhance your browsing experience.</span></li>
+                                <li><span>Remember your preferences.</span></li>
+                                <li><span>Analyze website traffic and usage patterns.</span></li>
+                            </ul>
+                            <p><span>You can manage your cookie preferences through your browser settings. Disabling cookies may affect your ability to use certain features of our website.</span></p>
+                            <hr>
+                            <h3><span><strong>7. Third-Party Links</strong></span></h3>
+                            <p><span>Our website may contain links to third-party sites. We are not responsible for the privacy practices or content of these external websites. We encourage you to review their privacy policies.</span></p>
+                            <hr>
+                            <h3><span><strong>8. Children’s Privacy</strong></span></h3>
+                            <p><span>Trendipay does not knowingly collect personal information from children under the age of 13. If you believe that a child has provided us with their information, please contact us, and we will delete it promptly.</span></p>
+                            <hr>
+                            <h3><span><strong>9. Updates to This Privacy Policy</strong></span></h3>
+                            <p><span>We may update this policy from time to time to reflect changes in our practices or for legal reasons. The latest version will always be available on our website, and significant changes will be communicated to you.</span></p>
+                
+                 '''
+            }
+            
+    if page == "return-refund":
+        res = {
+            'title': 'Return & Refund Policy',
+            'content': ''' 
+
+                            <p data-pm-slice="1 1 []"><span>Thank you for purchasing courses from Trendipay. We strive to ensure your satisfaction with our products and services. However, if you are not entirely satisfied, this Return and Refund Policy explains your rights and how to proceed with refund requests.</span></p>
+                            <hr>
+                            <h3><span><strong>1. Eligibility for Refunds</strong></span></h3>
+                            <p><span>To be eligible for a refund, the following conditions must be met:</span></p>
+                            <ul data-spread="false">
+                                <li><span>The refund request must be submitted within [insert time frame, e.g., 7 days] of purchase.</span></li>
+                                <li><span>The course content must not have been fully accessed, downloaded, or consumed.</span></li>
+                                <li><span>Promotional or discounted purchases may not be eligible for a refund unless otherwise stated.</span></li>
+                            </ul>
+                            <hr>
+                            <h3><span><strong>2. Refund Process</strong></span></h3>
+                            <p><span>To request a refund:</span></p>
+                            <ol data-spread="false">
+                                <li><span>Contact our support team via email at [Insert Email Address] or through our contact form on the website.</span></li>
+                                <li><span>Provide proof of purchase (e.g., order number, receipt).</span></li>
+                                <li><span>State the reason for the refund request.</span></li>
+                            </ol>
+                            <p><span>Once your request is received:</span></p>
+                            <ul data-spread="false">
+                                <li><span>Our team will review your case and notify you of the outcome within [insert number of days, e.g., 5 business days].</span></li>
+                                <li><span>Approved refunds will be processed within [insert number of days, e.g., 7-10 business days], and the amount will be credited back to your original payment method.</span></li>
+                            </ul>
+                            <hr>
+                            <h3><span><strong>3. Non-Refundable Items</strong></span></h3>
+                            <p><span>Refunds are not available for:</span></p>
+                            <ul data-spread="false">
+                                <li><span>Courses marked as non-refundable or final sale.</span></li>
+                                <li><span>Any course where the majority of the content has already been accessed.</span></li>
+                                <li><span>Services or add-ons provided in conjunction with the course purchase (e.g., consulting, mentoring sessions).</span></li>
+                            </ul>
+                            <hr>
+                            <h3><span><strong>4. Cancellation Policy</strong></span></h3>
+                            <ul data-spread="false">
+                                <li><span>You may cancel your purchase within [insert time frame, e.g., 24 hours] if the course has not been accessed.</span></li>
+                                <li><span>Cancellations outside this window may not qualify for a refund.</span></li>
+                            </ul>
+                            <hr>
+                            <h3><span><strong>5. Technical Issues</strong></span></h3>
+                            <p><span>If you encounter technical issues preventing access to your purchased course, please contact our support team immediately. We will work to resolve the issue or provide a refund if the issue cannot be resolved.</span></p>
+                            <hr>
+                            <h3><span><strong>6. Changes to This Policy</strong></span></h3>
+                            <p><span>Trendipay reserves the right to update or modify this policy at any time. Changes will take effect immediately upon posting. We recommend reviewing this policy periodically to stay informed about your rights.</span></p>
+                                        
+                                        
+            
+            
+            '''
+        }
+
+                
+
+    return render(request, 'landing/policy.html',res) 
+
+ 

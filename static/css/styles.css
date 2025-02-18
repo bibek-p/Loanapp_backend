@@ -1,0 +1,9 @@
+/* Custom styles can be added here */
+.hero {
+    background-image: linear-gradient(rgba(37, 99, 235, 0.9), rgba(67, 56, 202, 0.9));
+}
+
+/* Add smooth scrolling */
+html {
+    scroll-behavior: smooth;
+} 

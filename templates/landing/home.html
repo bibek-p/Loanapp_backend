@@ -1,0 +1,93 @@
+{% load static %}
+{% extends 'landing/base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero bg-gradient-to-r from-blue-600 to-indigo-800 text-white py-20">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4">
+                    Master AI & ML with Trendipay
+                </h1>
+                <p class="text-xl mb-8">
+                    Transform your career with industry-relevant courses in Artificial Intelligence and Machine Learning
+                </p>
+                <a href="#courses" class="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-blue-50 transition">
+                    Explore Courses
+                </a>
+            </div>
+            <div class="md:w-1/2">
+                <img src="{% static 'images/hero-image.png' %}" alt="AI Learning" class="rounded-lg shadow-xl">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Courses Section -->
+<section id="courses" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-12">Our Courses</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for course in courses %}
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <img src="{{ course.image_url }}" alt="{{ course.title }}" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2">{{ course.title }}</h3>
+                    <p class="text-gray-600 mb-4">{{ course.description }}</p>
+                    <div class="mb-4">
+                        <span class="text-2xl font-bold text-blue-600">₹{{ course.price }}</span>
+                        <span class="text-gray-500 ml-2">{{ course.duration }}</span>
+                    </div>
+                    <ul class="mb-6">
+                        {% for feature in course.features %}
+                        <li class="flex items-center text-gray-600 mb-2">
+                            <svg class="w-4 h-4 mr-2 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                            </svg>
+                            {{ feature }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <a href="#" class="block text-center bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">
+                        Enroll Now
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- About Us Section -->
+<section id="about" class="py-20">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <h2 class="text-3xl font-bold mb-6">About Trendipay</h2>
+                <p class="text-gray-600 mb-4">
+                    Trendipay is a leading educational platform specializing in AI and ML courses. Our mission is to make 
+                    cutting-edge technology education accessible to everyone.
+                </p>
+                <p class="text-gray-600 mb-4">
+                    With industry experts as instructors and a practical, hands-on approach to learning, we ensure our 
+                    students are well-prepared for the real-world challenges in AI and ML.
+                </p>
+                <div class="grid grid-cols-2 gap-4 mt-8">
+                    <div class="text-center">
+                        <span class="block text-3xl font-bold text-blue-600">1000+</span>
+                        <span class="text-gray-600">Students Trained</span>
+                    </div>
+                    <div class="text-center">
+                        <span class="block text-3xl font-bold text-blue-600">95%</span>
+                        <span class="text-gray-600">Success Rate</span>
+                    </div>
+                </div>
+            </div>
+            <div class="md:w-1/2 md:pl-12">
+                <img src="{% static 'images/about-us.jpg' %}" alt="About Trendipay" class="rounded-lg shadow-xl">
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 
