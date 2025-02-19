@@ -26,7 +26,7 @@ class User(models.Model):
 class UserOTP(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     phone_number = models.CharField(max_length=15, db_index=True)
-    otp_code = models.CharField(max_length=6)
+    otp_code = models.CharField(max_length=100)
     is_used = models.BooleanField(default=False)
     expires_at = models.DateTimeField(default=timezone.now() + timedelta(minutes=5))
     created_at = models.DateTimeField(auto_now_add=True)

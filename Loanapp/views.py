@@ -40,6 +40,74 @@ class UserSessionViewSet(viewsets.ModelViewSet):
     queryset = UserSession.objects.all()
     serializer_class = UserSessionSerializer
 
+
+def send_otp_request_api(phone_number):
+    url = "https://cpaas.messagecentral.com/auth/v1/authentication/token?customerId=C-58B94B38F8A045B&key=SGFudW1hbkA5ODdTUw==&scope=NEW&country=91&email=bibekispythondeveloper@gmail.com"
+
+    payload={}
+    headers = {}
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+    if response.status_code == 200:
+        access_token = response.json()['token']
+
+        #  Sending OTP request
+        url = "https://cpaas.messagecentral.com/verification/v3/send?countryCode=91&customerId=C-58B94B38F8A045B&flowType=SMS&mobileNumber=6371486421"
+
+        payload = {}
+        headers = {
+        'authToken': access_token
+        }
+
+        response = requests.request("POST", url, headers=headers, data=payload)
+        print(response.text)
+        if response.status_code == 200:
+            print("OTP sent successfully")
+            verificationId =  response.json()['data']['verificationId']
+            print(verificationId)
+            return True,verificationId
+        else:
+            print("Failed to send OTP")
+            return False,None
+
+
+    else:
+        return False,None
+   
+
+def send_otp_verify_api(otp,verificationId):
+    url = "https://cpaas.messagecentral.com/auth/v1/authentication/token?customerId=C-58B94B38F8A045B&key=SGFudW1hbkA5ODdTUw==&scope=NEW&country=91&email=bibekispythondeveloper@gmail.com"
+
+    payload={}
+    headers = {}
+    print(verificationId)
+    response = requests.request("GET", url, headers=headers, data=payload)
+    if response.status_code == 200:
+        access_token = response.json()['token']
+
+        #  Sending OTP request
+        url = "https://cpaas.messagecentral.com/verification/v3/validateOtp?&verificationId="+verificationId+"&code="+otp
+
+        payload = {}
+        headers = {
+        'authToken': access_token
+        }
+
+        response = requests.request("GET", url, headers=headers, data=payload)
+        print(response.text)
+        if response.status_code == 200:
+            verificationStatus =  response.json()['data']['verificationStatus']
+            if verificationStatus == "VERIFICATION_COMPLETED":
+                return True
+        else:
+            return False
+
+
+    else:
+        return False
+    
+
+
 @api_view(['POST'])
 @renderer_classes([JSONRenderer])
 def register_or_login(request):
@@ -52,14 +120,20 @@ def register_or_login(request):
     UserOTP.objects.filter(phone_number=phone_number, is_used=False).update(is_used=True)
     
     # Generate a new 4-digit OTP
-    otp_code = str(random.randint(1000, 9999))  # Generate a 4-digit OTP
-    expires_at = timezone.now() + timedelta(minutes=5)  # Set expiration time to 5 minutes from now
-    UserOTP.objects.create(phone_number=phone_number, otp_code=otp_code, is_used=False, expires_at=expires_at)
+    # otp_code = str(random.randint(1000, 9999))  # Generate a 4-digit OTP
+    send_otp_status,otp_code = send_otp_request_api(phone_number)
+    if send_otp_status:
+
+        expires_at = timezone.now() + timedelta(minutes=5)  # Set expiration time to 5 minutes from now
+        UserOTP.objects.create(phone_number=phone_number, otp_code=otp_code, is_used=False, expires_at=expires_at)
+        
+        # Here you would send the OTP to the user's phone number via SMS
+        print(f"OTP for {phone_number}: {otp_code}")  # Replace this with actual SMS sending logic
     
-    # Here you would send the OTP to the user's phone number via SMS
-    print(f"OTP for {phone_number}: {otp_code}")  # Replace this with actual SMS sending logic
+        return Response({"message": "OTP sent to your phone number."}, status=status.HTTP_200_OK)
+    else:
+        return Response({"error": "Failed to send OTP to your phone number."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
-    return Response({"message": "OTP sent to your phone number."}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @renderer_classes([JSONRenderer])
@@ -71,26 +145,33 @@ def verify_otp(request):
         print(phone_number, otp_code)
         
         try:
-            otp_entry = UserOTP.objects.get(phone_number=phone_number, otp_code=otp_code, is_used=False)
+            otp_entry = UserOTP.objects.filter(phone_number=phone_number).order_by('-created_at').first()
+            print(otp_entry)
+            verificationId = otp_entry.otp_code
+            verify_status = send_otp_verify_api(otp_code,verificationId)
+            if verify_status == True:
+
             
-            # Check if the OTP has expired
-            if otp_entry.expires_at < timezone.now():
-                return Response({"error": "OTP has expired."}, status=status.HTTP_400_BAD_REQUEST)
-            
-            user = User.objects.get(phone_number=phone_number)
-            
-            # Mark OTP as used
-            otp_entry.is_used = True
-            otp_entry.save()
-            
-            # Update user verification status
-            user.is_verified = True
-            user.save()
-            
-            # Generate an access token
-            access_token = AccessToken.for_user(user)
-            
-            return Response({"message": "OTP verified successfully.", "access_token": str(access_token)}, status=status.HTTP_200_OK)
+                # # Check if the OTP has expired
+                # if otp_entry.expires_at < timezone.now():
+                #     return Response({"error": "OTP has expired."}, status=status.HTTP_400_BAD_REQUEST)
+                
+                user = User.objects.get(phone_number=phone_number)
+                
+                # Mark OTP as used
+                otp_entry.is_used = True
+                otp_entry.save()
+                
+                # Update user verification status
+                user.is_verified = True
+                user.save()
+                
+                # Generate an access token
+                access_token = AccessToken.for_user(user)
+                
+                return Response({"message": "OTP verified successfully.", "access_token": str(access_token)}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "Invalid OTP."}, status=status.HTTP_400_BAD_REQUEST)
         except UserOTP.DoesNotExist:
             return Response({"error": "Invalid or expired OTP."}, status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
