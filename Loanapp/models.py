@@ -394,4 +394,30 @@ class NotificationPreference(models.Model):
     quiet_hours_start = models.TimeField(null=True, blank=True)
     quiet_hours_end = models.TimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True) 
+    updated_at = models.DateTimeField(auto_now=True)
+
+class UserContacts(models.Model):
+    user_phone = models.CharField(max_length=15, unique=True)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'User Contact'
+        verbose_name_plural = 'User Contacts'
+
+    def __str__(self):
+        return f"Contacts for {self.user_phone}"
+
+class Contact(models.Model):
+    user_contacts = models.ForeignKey(UserContacts, on_delete=models.CASCADE, related_name='contacts')
+    name = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=15)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user_contacts', 'phone_number')
+
+    def __str__(self):
+        return f"{self.name} ({self.phone_number})" 

@@ -165,4 +165,22 @@ class CouponSerializer(serializers.ModelSerializer):
             'is_live_to_list',
             'created_at',
             'updated_at'
-        ] 
+        ]
+
+class ContactSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=100)
+    phone_number = serializers.CharField(max_length=15)
+
+class LocationSerializer(serializers.Serializer):
+    latitude = serializers.DecimalField(max_digits=90, decimal_places=10)
+    longitude = serializers.DecimalField(max_digits=90, decimal_places=10)
+
+class SaveContactsRequestSerializer(serializers.Serializer):
+    user_phone = serializers.CharField(max_length=15)
+    contacts = ContactSerializer(many=True)
+    location = LocationSerializer()
+
+class SaveContactsResponseSerializer(serializers.Serializer):
+    status = serializers.CharField()
+    message = serializers.CharField()
+    data = serializers.DictField() 

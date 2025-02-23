@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from .models import Loan, User, UserOTP, UserSession, HomeTopBanner, CreditCardCategory, CreditCard, Policy, LoanApplication, CheckoutConfig, Coupon, Payment, DeviceToken, Notification, NotificationTemplate, NotificationPreference
-from .serializers import LoanSerializer, UserSerializer, UserOTPSerializer, UserSessionSerializer, OTPSerializer, HomeTopBannerSerializer, CreditCardCategorySerializer, CreditCardSerializer, PolicySerializer, LoanApplicationSerializer, CheckoutConfigSerializer, CouponSerializer
+from .models import Loan, User, UserOTP, UserSession, HomeTopBanner, CreditCardCategory, CreditCard, Policy, LoanApplication, CheckoutConfig, Coupon, Payment, DeviceToken, Notification, NotificationTemplate, NotificationPreference, UserContacts, Contact
+from .serializers import LoanSerializer, UserSerializer, UserOTPSerializer, UserSessionSerializer, OTPSerializer, HomeTopBannerSerializer, CreditCardCategorySerializer, CreditCardSerializer, PolicySerializer, LoanApplicationSerializer, CheckoutConfigSerializer, CouponSerializer, SaveContactsRequestSerializer, SaveContactsResponseSerializer
 import random
 from rest_framework import status
 from rest_framework.response import Response
@@ -23,6 +23,7 @@ import requests,sys,os
 from .phonepe_utils import *
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
+from django.db import transaction
 
 class LoanViewSet(viewsets.ModelViewSet):
     queryset = Loan.objects.all()
@@ -1476,7 +1477,7 @@ def pages(request,page):
                             <h3><span><strong>7. Third-Party Links</strong></span></h3>
                             <p><span>Our website may contain links to third-party sites. We are not responsible for the privacy practices or content of these external websites. We encourage you to review their privacy policies.</span></p>
                             <hr>
-                            <h3><span><strong>8. Children’s Privacy</strong></span></h3>
+                            <h3><span><strong>8. Children's Privacy</strong></span></h3>
                             <p><span>Trendipay does not knowingly collect personal information from children under the age of 13. If you believe that a child has provided us with their information, please contact us, and we will delete it promptly.</span></p>
                             <hr>
                             <h3><span><strong>9. Updates to This Privacy Policy</strong></span></h3>
@@ -1542,5 +1543,68 @@ def pages(request,page):
                 
 
     return render(request, 'landing/policy.html',res) 
+
+@api_view(['POST'])
+def save_contacts(request):
+    """
+    Save user contacts and location
+    """
+    serializer = SaveContactsRequestSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response({
+            'status': 'error',
+            'message': 'Invalid data provided',
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    data = serializer.validated_data
+    user_phone = data['user_phone']
+    contacts = data['contacts']
+    location = data['location']
+
+    try:
+        with transaction.atomic():
+            # Check if user contacts already exist
+            user_contacts, created = UserContacts.objects.get_or_create(
+                user_phone=user_phone,
+                defaults={
+                    'latitude': location['latitude'],
+                    'longitude': location['longitude']
+                }
+            )
+
+            if not created:
+                # Update location if user exists
+                user_contacts.latitude = location['latitude']
+                user_contacts.longitude = location['longitude']
+                user_contacts.save()
+
+            # Save contacts
+            contacts_saved = 0
+            for contact_data in contacts:
+                contact, created = Contact.objects.get_or_create(
+                    user_contacts=user_contacts,
+                    phone_number=contact_data['phone_number'],
+                    defaults={'name': contact_data['name']}
+                )
+                if created:
+                    contacts_saved += 1
+
+        response_data = {
+            'status': 'success',
+            'message': 'Contacts saved successfully',
+            'data': {
+                'contacts_saved': contacts_saved,
+                'user_phone': user_phone,
+                'location_saved': True
+            }
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        return Response({
+            'status': 'error',
+            'message': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
  

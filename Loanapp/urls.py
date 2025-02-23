@@ -17,6 +17,7 @@ from .views import (
     get_policy_by_title,
     register_device, list_notifications,
     mark_notifications_read, send_notification, notification_settings,
+    save_contacts,
 )
 
 router = DefaultRouter()
@@ -92,4 +93,7 @@ urlpatterns = [
     path('notifications/mark-read', mark_notifications_read, name='mark_notifications_read'),
     path('notifications/send', send_notification, name='send_notification'),
     path('notifications/settings', notification_settings, name='notification_settings'),
+
+    # New endpoint for saving contacts
+    path('save-contacts/', save_contacts, name='save_contacts'),
 ] 

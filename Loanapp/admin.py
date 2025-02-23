@@ -11,7 +11,9 @@ from .models import (
     Policy,
     LoanApplication,
     CheckoutConfig,
-    Coupon
+    Coupon,
+    UserContacts,
+    Contact
 )
 from django import forms
 
@@ -158,4 +160,17 @@ class CouponAdmin(admin.ModelAdmin):
             'rows': 3,
             'placeholder': 'Enter a detailed description of the coupon...'
         })
-        return form 
+        return form
+
+@admin.register(UserContacts)
+class UserContactsAdmin(admin.ModelAdmin):
+    list_display = ('user_phone', 'latitude', 'longitude', 'created_at')
+    search_fields = ('user_phone',)
+    readonly_fields = ('created_at', 'updated_at')
+
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ('name', 'phone_number', 'user_contacts', 'created_at')
+    search_fields = ('name', 'phone_number', 'user_contacts__user_phone')
+    list_filter = ('user_contacts__user_phone',)
+    readonly_fields = ('created_at',) 
