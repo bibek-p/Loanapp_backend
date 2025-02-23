@@ -19,8 +19,8 @@ from .forms import CreditCardForm
 from rest_framework.renderers import JSONRenderer
 import uuid
 import json
-import requests
-from .phonepe_utils import phonepe_create_order, check_payment_status
+import requests,sys,os
+from .phonepe_utils import *
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
 
@@ -52,7 +52,7 @@ def send_otp_request_api(phone_number):
         access_token = response.json()['token']
 
         #  Sending OTP request
-        url = "https://cpaas.messagecentral.com/verification/v3/send?countryCode=91&customerId=C-58B94B38F8A045B&flowType=SMS&mobileNumber=6371486421"
+        url = "https://cpaas.messagecentral.com/verification/v3/send?countryCode=91&customerId=C-58B94B38F8A045B&flowType=SMS&mobileNumber="+str(phone_number)
 
         payload = {}
         headers = {
@@ -191,14 +191,19 @@ def resend_otp(request):
         UserOTP.objects.filter(phone_number=phone_number, is_used=False).update(is_used=True)
         
         # Generate a new 4-digit OTP
-        otp_code = str(random.randint(1000, 9999))  # Generate a 4-digit OTP
-        expires_at = timezone.now() + timedelta(minutes=5)  # Set expiration time to 5 minutes from now
-        UserOTP.objects.create(phone_number=phone_number, otp_code=otp_code, is_used=False, expires_at=expires_at)
-        
-        # Here you would send the OTP to the user's phone number via SMS
-        print(f"Resent OTP for {phone_number}: {otp_code}")  # Replace this with actual SMS sending logic
-        
-        return Response({"message": "OTP resent to your phone number."}, status=status.HTTP_200_OK)
+        # otp_code = str(random.randint(1000, 9999))  # Generate a 4-digit OTP
+        send_otp_status,otp_code = send_otp_request_api(phone_number)
+        if send_otp_status:
+            expires_at = timezone.now() + timedelta(minutes=5)  # Set expiration time to 5 minutes from now
+            UserOTP.objects.create(phone_number=phone_number, otp_code=otp_code, is_used=False, expires_at=expires_at)
+            
+            # Here you would send the OTP to the user's phone number via SMS
+            print(f"Resent OTP for {phone_number}: {otp_code}")  # Replace this with actual SMS sending logic
+            
+            return Response({"message": "OTP resent to your phone number."}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Failed to send OTP to your phone number."}, status=status.HTTP_404_NOT_FOUND)
+
     except User.DoesNotExist:
         return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
@@ -665,7 +670,7 @@ def initiate_phonepe_payment(request):
         s2s_callback_url = request.build_absolute_uri(reverse('payment_callback'))
 
         # Create PhonePe order
-        payment_response = phonepe_create_order(
+        payment_response = UPI_PAYMENT(
             ui_redirect_url=ui_redirect_url,
             s2s_callback_url=s2s_callback_url,
             unique_transaction_id=merchant_transaction_id,
@@ -709,6 +714,9 @@ def initiate_phonepe_payment(request):
         }, status=status.HTTP_400_BAD_REQUEST)
 
     except Exception as e:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(exc_type, fname, exc_tb.tb_lineno)
         return Response({
             'status': 'error',
             'message': str(e)
@@ -826,11 +834,17 @@ def verify_payment(request):
             }, status=status.HTTP_404_NOT_FOUND)
 
         # Check status from PhonePe
-        status_response = check_payment_status(order_id)
+        status_response = UPI_PAYMENT_status(order_id)
         print(f"Status response: {status_response}")  # Debug print
         
         # Update payment status in DB
         payment.status = 'completed' if status_response["payment_status"] == "SUCCESS" else 'failed'
+        if status_response["payment_status"] == "SUCCESS":
+            payment.status = 'completed'
+        elif status_response["payment_status"] == "PENDING":
+            payment.status = 'pending'
+        else:
+            payment.status = 'failed'
         payment.gateway_response = status_response
         payment.save()
 

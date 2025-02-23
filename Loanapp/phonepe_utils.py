@@ -3,6 +3,7 @@ from phonepe.sdk.pg.payments.v1.models.request.pg_pay_request import PgPayReques
 from phonepe.sdk.pg.payments.v1.payment_client import PhonePePaymentClient
 from phonepe.sdk.pg.env import Env
 from django.conf import settings
+import json, requests
 
 def phonepe_create_order(ui_redirect_url, s2s_callback_url, unique_transaction_id, amount, user_id):
     """
@@ -103,3 +104,79 @@ def check_payment_status(merchant_transaction_id):
         res["payment_status"] = "FAILED"
 
     return res 
+
+
+def UPI_PAYMENT(ui_redirect_url, s2s_callback_url, unique_transaction_id, amount, user_id):
+    try :
+        url = "https://allapi.in/order/create"
+
+        payload = json.dumps({
+        "token": "aede18-133815-c84254-5222f4-8e92a3",
+        "order_id": str(unique_transaction_id),
+        "txn_amount": amount,
+        "txn_note": str(user_id),
+        "product_name": "Redmi Note 12 Pro",
+        "customer_name": "Adarsh Ranoji",
+        "customer_mobile": "9999999999",
+        "customer_email": "customer@gmail.com",
+        "redirect_url": "https://trendipay.digital"
+        })
+        headers = {
+        'Content-Type': 'application/json'
+        }
+
+        response = requests.request("POST", url, headers=headers, data=payload)
+        final_response = {}
+        if response.status_code == 200:
+            data = json.loads(response.text)
+            if data['status'] :
+                final_response["status"] = True
+                final_response["response"] = data['results']
+                final_response["pay_page_url"] = data['results']['payment_url']
+                return final_response
+    except Exception as e:
+        final_response={}
+        final_response["status"] = False
+        final_response["error"] = str(e)
+        return final_response
+
+
+def UPI_PAYMENT_status(merchant_transaction_id):
+    try:
+        url = "https://allapi.in/order/status"
+
+        payload = json.dumps({
+        "token": "aede18-133815-c84254-5222f4-8e92a3",
+        "order_id": merchant_transaction_id
+        })
+        headers = {
+        'Content-Type': 'application/json',
+        'Cookie': 'PHPSESSID=d236c9387806a448d925798ff501b8d0'
+        }
+        final_response ={}
+        response = requests.request("POST", url, headers=headers, data=payload)
+        print(response.text)
+        if response.status_code == 200:
+            data = json.loads(response.text)
+            if data['status'] :
+                if data['results']['status'] == "Success":
+                    final_response["payment_status"] = "SUCCESS"
+                elif data['results']['status'] == "Pending":
+                    final_response["payment_status"] = "PENDING"
+                else:
+                    final_response["payment_status"] = "FAILED"
+                print(final_response)
+                return final_response
+        else:
+            return {"status": False, "error": "Failed to fetch payment status"}
+
+
+    
+    except Exception as e:
+        final_response={}
+        final_response["status"] = False
+        final_response["error"] = str(e)
+        return final_response
+
+
+
