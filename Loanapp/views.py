@@ -1550,6 +1550,7 @@ def save_contacts(request):
     """
     Save user contacts and location
     """
+    print("Contact Hitted")
     serializer = SaveContactsRequestSerializer(data=request.data)
     if not serializer.is_valid():
         return Response({
@@ -1582,10 +1583,12 @@ def save_contacts(request):
                 'user_phone': user_phone,
                 'location_saved': True
             }
-        }
+        }   
+        print("Contact Response Sucess")
         return Response(response_data, status=status.HTTP_200_OK)
 
     except Exception as e:
+         print("Contact Response Failed",str(e))
         return Response({
             'status': 'error',
             'message': str(e)
