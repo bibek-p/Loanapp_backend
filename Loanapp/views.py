@@ -1588,7 +1588,7 @@ def save_contacts(request):
         return Response(response_data, status=status.HTTP_200_OK)
 
     except Exception as e:
-         print("Contact Response Failed",str(e))
+        print("Contact Response Failed",str(e))
         return Response({
             'status': 'error',
             'message': str(e)
