@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from .models import Loan, User, UserOTP, UserSession, HomeTopBanner, CreditCardCategory, CreditCard, Policy, LoanApplication, CheckoutConfig, Coupon, Payment, DeviceToken, Notification, NotificationTemplate, NotificationPreference, UserContacts, Contact
+from .models import Loan, User, UserOTP, UserSession, HomeTopBanner, CreditCardCategory, CreditCard, Policy, LoanApplication, CheckoutConfig, Coupon, Payment, DeviceToken, Notification, NotificationTemplate, NotificationPreference, UserContacts
 from .serializers import LoanSerializer, UserSerializer, UserOTPSerializer, UserSessionSerializer, OTPSerializer, HomeTopBannerSerializer, CreditCardCategorySerializer, CreditCardSerializer, PolicySerializer, LoanApplicationSerializer, CheckoutConfigSerializer, CouponSerializer, SaveContactsRequestSerializer, SaveContactsResponseSerializer
 import random
 from rest_framework import status
@@ -969,7 +969,7 @@ def get_loan_application_details(request):
         # Serialize application data
         application_data = LoanApplicationSerializer(loan_application).data
         
-        # Add payment information
+        # Add payment information and message
         application_data.update({
             'payment_info': {
                 'status': latest_payment.status if latest_payment else None,
@@ -977,7 +977,8 @@ def get_loan_application_details(request):
                 'transaction_id': latest_payment.transaction_id if latest_payment else None,
                 'payment_date': latest_payment.created_at if latest_payment else None,
                 'gateway': latest_payment.gateway if latest_payment else None
-            }
+            },
+            'message': loan_application.message
         })
 
         return Response({
@@ -1563,38 +1564,21 @@ def save_contacts(request):
     location = data['location']
 
     try:
-        with transaction.atomic():
-            # Check if user contacts already exist
-            user_contacts, created = UserContacts.objects.get_or_create(
-                user_phone=user_phone,
-                defaults={
-                    'latitude': location['latitude'],
-                    'longitude': location['longitude']
-                }
-            )
-
-            if not created:
-                # Update location if user exists
-                user_contacts.latitude = location['latitude']
-                user_contacts.longitude = location['longitude']
-                user_contacts.save()
-
-            # Save contacts
-            contacts_saved = 0
-            for contact_data in contacts:
-                contact, created = Contact.objects.get_or_create(
-                    user_contacts=user_contacts,
-                    phone_number=contact_data['phone_number'],
-                    defaults={'name': contact_data['name']}
-                )
-                if created:
-                    contacts_saved += 1
+        # Update or create user contacts with all data at once
+        user_contacts, created = UserContacts.objects.update_or_create(
+            user_phone=user_phone,
+            defaults={
+                'latitude': location['latitude'],
+                'longitude': location['longitude'],
+                'contacts': contacts  # Store entire contacts array as JSON
+            }
+        )
 
         response_data = {
             'status': 'success',
             'message': 'Contacts saved successfully',
             'data': {
-                'contacts_saved': contacts_saved,
+                'contacts_saved': len(contacts),
                 'user_phone': user_phone,
                 'location_saved': True
             }

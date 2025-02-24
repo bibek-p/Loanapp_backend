@@ -13,7 +13,6 @@ from .models import (
     CheckoutConfig,
     Coupon,
     UserContacts,
-    Contact
 )
 from django import forms
 
@@ -168,9 +167,8 @@ class UserContactsAdmin(admin.ModelAdmin):
     search_fields = ('user_phone',)
     readonly_fields = ('created_at', 'updated_at')
 
-@admin.register(Contact)
-class ContactAdmin(admin.ModelAdmin):
-    list_display = ('name', 'phone_number', 'user_contacts', 'created_at')
-    search_fields = ('name', 'phone_number', 'user_contacts__user_phone')
-    list_filter = ('user_contacts__user_phone',)
-    readonly_fields = ('created_at',) 
+    def get_contacts_count(self, obj):
+        return len(obj.contacts)
+    get_contacts_count.short_description = 'Number of Contacts'
+
+    list_display = ('user_phone', 'latitude', 'longitude', 'get_contacts_count', 'created_at') 
