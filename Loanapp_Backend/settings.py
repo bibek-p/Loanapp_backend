@@ -59,6 +59,7 @@ ROOT_URLCONF = 'Loanapp_Backend.urls'
 
 CORS_ALLOWED_ORIGINS = [
     "https://swift-loan.expo.app",
+    "http://localhost:8081"
 ]
 
 TEMPLATES = [
