@@ -61,7 +61,13 @@ CORS_ALLOWED_ORIGINS = [
     "https://swift-loan.expo.app",
     "http://localhost:8081",
     "https://swift-loan-webapp.expo.app",
-    "*"
+    "https://swift-loan-v1.expo.app/",
+    "https://swift-loan-v2.expo.app/",
+    "https://swift-loan-v3.expo.app/",
+    "https://swift-loan-v4.expo.app/",
+    "https://swift-loan-v5.expo.app/",
+    "https://swift-loan-v6.expo.app/",
+    "https://swift-loan-v7.expo.app/",
 ]
 
 TEMPLATES = [
